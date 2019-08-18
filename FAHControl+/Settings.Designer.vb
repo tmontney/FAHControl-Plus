@@ -43,10 +43,16 @@ Partial Class Settings
         Me.confappRemBTN = New System.Windows.Forms.Button()
         Me.confappsCBX = New System.Windows.Forms.CheckBox()
         Me.confappLBX = New System.Windows.Forms.ListBox()
+        Me.cpuidleGBX = New System.Windows.Forms.GroupBox()
+        Me.cpuidleTB = New System.Windows.Forms.TrackBar()
+        Me.cpuidleCBX = New System.Windows.Forms.CheckBox()
+        Me.cpuidleLBL = New System.Windows.Forms.Label()
         Me.fahclientGBX.SuspendLayout()
         Me.snoozeGBX.SuspendLayout()
         Me.slotwhitelistGBX.SuspendLayout()
         Me.confappGBX.SuspendLayout()
+        Me.cpuidleGBX.SuspendLayout()
+        CType(Me.cpuidleTB, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'fahclientGBX
@@ -58,7 +64,7 @@ Partial Class Settings
         Me.fahclientGBX.Controls.Add(Me.fahclientPortLBL)
         Me.fahclientGBX.Controls.Add(Me.fahclientAddressTXT)
         Me.fahclientGBX.Controls.Add(Me.fahclientAddressLBL)
-        Me.fahclientGBX.Location = New System.Drawing.Point(16, 15)
+        Me.fahclientGBX.Location = New System.Drawing.Point(43, 15)
         Me.fahclientGBX.Margin = New System.Windows.Forms.Padding(4)
         Me.fahclientGBX.Name = "fahclientGBX"
         Me.fahclientGBX.Padding = New System.Windows.Forms.Padding(4)
@@ -135,7 +141,7 @@ Partial Class Settings
         '
         'saveBTN
         '
-        Me.saveBTN.Location = New System.Drawing.Point(36, 672)
+        Me.saveBTN.Location = New System.Drawing.Point(54, 733)
         Me.saveBTN.Margin = New System.Windows.Forms.Padding(4)
         Me.saveBTN.Name = "saveBTN"
         Me.saveBTN.Size = New System.Drawing.Size(100, 28)
@@ -145,7 +151,7 @@ Partial Class Settings
         '
         'cancelBTN
         '
-        Me.cancelBTN.Location = New System.Drawing.Point(144, 672)
+        Me.cancelBTN.Location = New System.Drawing.Point(162, 733)
         Me.cancelBTN.Margin = New System.Windows.Forms.Padding(4)
         Me.cancelBTN.Name = "cancelBTN"
         Me.cancelBTN.Size = New System.Drawing.Size(100, 28)
@@ -157,7 +163,7 @@ Partial Class Settings
         '
         Me.snoozeGBX.Controls.Add(Me.fahSnoozeTXT)
         Me.snoozeGBX.Controls.Add(Me.snoozeLBL)
-        Me.snoozeGBX.Location = New System.Drawing.Point(16, 209)
+        Me.snoozeGBX.Location = New System.Drawing.Point(43, 209)
         Me.snoozeGBX.Name = "snoozeGBX"
         Me.snoozeGBX.Size = New System.Drawing.Size(225, 61)
         Me.snoozeGBX.TabIndex = 3
@@ -183,7 +189,7 @@ Partial Class Settings
         '
         Me.slotwhitelistGBX.Controls.Add(Me.slotidsLBL)
         Me.slotwhitelistGBX.Controls.Add(Me.slotidsTXT)
-        Me.slotwhitelistGBX.Location = New System.Drawing.Point(16, 276)
+        Me.slotwhitelistGBX.Location = New System.Drawing.Point(43, 276)
         Me.slotwhitelistGBX.Name = "slotwhitelistGBX"
         Me.slotwhitelistGBX.Size = New System.Drawing.Size(225, 67)
         Me.slotwhitelistGBX.TabIndex = 4
@@ -212,7 +218,7 @@ Partial Class Settings
         Me.confappGBX.Controls.Add(Me.confappRemBTN)
         Me.confappGBX.Controls.Add(Me.confappsCBX)
         Me.confappGBX.Controls.Add(Me.confappLBX)
-        Me.confappGBX.Location = New System.Drawing.Point(16, 349)
+        Me.confappGBX.Location = New System.Drawing.Point(43, 349)
         Me.confappGBX.Name = "confappGBX"
         Me.confappGBX.Size = New System.Drawing.Size(225, 236)
         Me.confappGBX.TabIndex = 5
@@ -256,11 +262,52 @@ Partial Class Settings
         Me.confappLBX.Size = New System.Drawing.Size(183, 148)
         Me.confappLBX.TabIndex = 0
         '
+        'cpuidleGBX
+        '
+        Me.cpuidleGBX.Controls.Add(Me.cpuidleLBL)
+        Me.cpuidleGBX.Controls.Add(Me.cpuidleCBX)
+        Me.cpuidleGBX.Controls.Add(Me.cpuidleTB)
+        Me.cpuidleGBX.Location = New System.Drawing.Point(12, 591)
+        Me.cpuidleGBX.Name = "cpuidleGBX"
+        Me.cpuidleGBX.Size = New System.Drawing.Size(292, 127)
+        Me.cpuidleGBX.TabIndex = 6
+        Me.cpuidleGBX.TabStop = False
+        Me.cpuidleGBX.Text = "CPU Idling"
+        '
+        'cpuidleTB
+        '
+        Me.cpuidleTB.Location = New System.Drawing.Point(6, 48)
+        Me.cpuidleTB.Maximum = 99
+        Me.cpuidleTB.Minimum = 1
+        Me.cpuidleTB.Name = "cpuidleTB"
+        Me.cpuidleTB.Size = New System.Drawing.Size(280, 56)
+        Me.cpuidleTB.TabIndex = 7
+        Me.cpuidleTB.Value = 1
+        '
+        'cpuidleCBX
+        '
+        Me.cpuidleCBX.AutoSize = True
+        Me.cpuidleCBX.Location = New System.Drawing.Point(106, 21)
+        Me.cpuidleCBX.Name = "cpuidleCBX"
+        Me.cpuidleCBX.Size = New System.Drawing.Size(82, 21)
+        Me.cpuidleCBX.TabIndex = 8
+        Me.cpuidleCBX.Text = "Enabled"
+        Me.cpuidleCBX.UseVisualStyleBackColor = True
+        '
+        'cpuidleLBL
+        '
+        Me.cpuidleLBL.AutoSize = True
+        Me.cpuidleLBL.Location = New System.Drawing.Point(111, 92)
+        Me.cpuidleLBL.Name = "cpuidleLBL"
+        Me.cpuidleLBL.Size = New System.Drawing.Size(0, 17)
+        Me.cpuidleLBL.TabIndex = 9
+        '
         'Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(270, 723)
+        Me.ClientSize = New System.Drawing.Size(316, 777)
+        Me.Controls.Add(Me.cpuidleGBX)
         Me.Controls.Add(Me.confappGBX)
         Me.Controls.Add(Me.slotwhitelistGBX)
         Me.Controls.Add(Me.snoozeGBX)
@@ -279,6 +326,9 @@ Partial Class Settings
         Me.slotwhitelistGBX.PerformLayout()
         Me.confappGBX.ResumeLayout(False)
         Me.confappGBX.PerformLayout()
+        Me.cpuidleGBX.ResumeLayout(False)
+        Me.cpuidleGBX.PerformLayout()
+        CType(Me.cpuidleTB, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -304,4 +354,8 @@ Partial Class Settings
     Friend WithEvents confappRemBTN As Button
     Friend WithEvents confappsCBX As CheckBox
     Friend WithEvents confappLBX As ListBox
+    Friend WithEvents cpuidleGBX As GroupBox
+    Friend WithEvents cpuidleTB As TrackBar
+    Friend WithEvents cpuidleLBL As Label
+    Friend WithEvents cpuidleCBX As CheckBox
 End Class

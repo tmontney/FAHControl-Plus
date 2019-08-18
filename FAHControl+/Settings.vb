@@ -33,6 +33,10 @@
         slotidsTXT.Text = My.Settings.fahSlotWhitelist
         confappsCBX.Checked = My.Settings.fahUseConfApp
 
+        cpuidleCBX.Checked = My.Settings.fahUseIdling
+        cpuidleTB.Value = My.Settings.fahCPUIdleValue
+        cpuidleLBL.Text = My.Settings.fahCPUIdleValue & "%"
+
         confappLBX.Items.Clear()
         SpecializedStringCollectionToListboxObjectCollection(My.Settings.fahConfApps, confappLBX)
 
@@ -81,6 +85,9 @@
             My.Settings.fahUseConfApp = confappsCBX.Checked
             My.Settings.fahConfApps = ListboxObjectCollectionToSpecializedStringCollection(confappLBX.Items)
 
+            My.Settings.fahUseIdling = cpuidleCBX.Checked
+            My.Settings.fahCPUIdleValue = cpuidleTB.Value
+
             My.Settings.Save()
 
             Me.Close()
@@ -121,5 +128,9 @@
 
     Private Sub confappLBX_SelectedIndexChanged(sender As Object, e As MouseEventArgs) Handles confappLBX.MouseMove
         If confappLBX.IndexFromPoint(e.Location) <> -1 Then confappLBXTT.SetToolTip(confappLBX, confappLBX.Items.Item(confappLBX.IndexFromPoint(e.Location)))
+    End Sub
+
+    Private Sub cpuidleTB_Scroll(sender As Object, e As EventArgs) Handles cpuidleTB.Scroll
+        cpuidleLBL.Text = cpuidleTB.Value.ToString() & "%"
     End Sub
 End Class

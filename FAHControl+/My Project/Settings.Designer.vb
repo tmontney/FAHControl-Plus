@@ -138,6 +138,30 @@ Namespace My
                 Me("fahConfApps") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property fahUseIdling() As Boolean
+            Get
+                Return CType(Me("fahUseIdling"),Boolean)
+            End Get
+            Set
+                Me("fahUseIdling") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
+        Public Property fahCPUIdleValue() As Integer
+            Get
+                Return CType(Me("fahCPUIdleValue"),Integer)
+            End Get
+            Set
+                Me("fahCPUIdleValue") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

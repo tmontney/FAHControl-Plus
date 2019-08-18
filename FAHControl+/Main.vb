@@ -7,6 +7,8 @@
     Dim WithEvents fw_d As ProcessWatcher
 
     Dim fw_a As List(Of String)
+
+    Dim cpuPollerThread As Threading.Thread
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Visible = False
         Me.WindowState = FormWindowState.Minimized
@@ -42,6 +44,9 @@
             .ContextMenu = cm
         }
 
+        fc = New FAH.Client
+        fc.Connect(False)
+
         fw_c = New ProcessWatcher(ProcessWatcher.ModeEnum.Creation)
         fw_d = New ProcessWatcher(ProcessWatcher.ModeEnum.Deletion)
 
@@ -50,13 +55,15 @@
             fw_d.AddWatchedProcess(app)
         Next
 
-        fw_c.Listen()
-        fw_d.Listen()
+        If My.Settings.fahUseConfApp Then
+            fw_c.Listen()
+            fw_d.Listen()
+        End If
+
+        cpuPollerThread = New Threading.Thread(AddressOf CPUPoller)
+        If My.Settings.fahUseIdling Then StartCPUPolling()
 
         fw_a = New List(Of String)
-
-        fc = New FAH.Client
-        fc.Connect(False)
     End Sub
 
     Private Sub snoozeMI_Click(sender As Object, e As EventArgs)
@@ -102,6 +109,8 @@
             fw_c.StopListening()
             fw_d.StopListening()
         End If
+
+        If My.Settings.fahUseIdling Then RestartCPUPolling() Else StopCPUPolling()
     End Sub
 
     Private Sub exitMI_Click(sender As Object, e As EventArgs)
@@ -168,5 +177,58 @@
     Protected Overrides Sub OnShown(e As EventArgs)
         MyBase.OnShown(e)
         Me.Hide()
+    End Sub
+
+    Private Sub StartCPUPolling()
+        If cpuPollerThread IsNot Nothing AndAlso cpuPollerThread.ThreadState <> Threading.ThreadState.Running Then
+            cpuPollerThread = New Threading.Thread(AddressOf CPUPoller)
+            cpuPollerThread.Start()
+        End If
+    End Sub
+
+    Private Sub StopCPUPolling()
+        If cpuPollerThread IsNot Nothing AndAlso cpuPollerThread.ThreadState <> Threading.ThreadState.Stopped Then cpuPollerThread.Abort()
+    End Sub
+
+    Private Sub RestartCPUPolling()
+        StopCPUPolling()
+        StartCPUPolling()
+    End Sub
+
+    Private Sub CPUPoller()
+        Dim ProcTotalTime As New PerformanceCounter("Processor", "% Processor Time", "_Total")
+        ProcTotalTime.NextValue()
+
+        Dim CurrentSlotInfo As List(Of FAH.Slot) = fc.ListSlots()
+        Dim FilteredSlotInfo As List(Of FAH.Slot) = CurrentSlotInfo.Where(Function(y) CurrentSlotInfo.Select(Function(x) x.ID).
+                                                                              Intersect(My.Settings.fahSlotWhitelist.Split(",").ToList().
+                                                                              Select(Function(x) x)).Contains(y.ID)).ToList()
+
+        Dim CoresFolderDI As New IO.DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\FAHClient\cores")
+        Dim CoresFI As IO.FileInfo() = CoresFolderDI.GetFiles("*.exe", IO.SearchOption.AllDirectories)
+        Dim Cores As New List(Of PerformanceCounter)
+        For Each Core As IO.FileInfo In CoresFI
+            Dim pc As New PerformanceCounter("Process", "% Processor Time", IO.Path.GetFileNameWithoutExtension(Core.Name))
+            Try
+                pc.NextValue()
+            Catch ex As Exception
+            End Try
+            Cores.Add(pc)
+        Next
+
+        While My.Settings.fahUseIdling
+            Dim CurProcTotalTimeVal As Single = ProcTotalTime.NextValue()
+            Dim CurCoresTotalTimeVal As Single = 0
+            For Each Core In Cores
+                Try
+                    CurCoresTotalTimeVal += Core.NextValue
+                Catch ex As Exception
+                End Try
+            Next
+            Dim CurProcTotalTimeOffsetVal As Single = CurProcTotalTimeVal - (CurCoresTotalTimeVal / Environment.ProcessorCount)
+            If CurProcTotalTimeVal > My.Settings.fahCPUIdleValue Then Snooze(FilteredSlotInfo) Else Wake(FilteredSlotInfo)
+
+            Threading.Thread.Sleep(5000)
+        End While
     End Sub
 End Class
