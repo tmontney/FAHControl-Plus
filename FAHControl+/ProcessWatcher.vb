@@ -73,14 +73,7 @@
 
         While cancellationRequested = False
             Dim e As Management.ManagementBaseObject = ListenOnce()
-            If e IsNot Nothing Then
-                Dim expath As String = e("TargetInstance")("ExecutablePath")
-                'If expath IsNot Nothing Then
-                Dim name As String = e("TargetInstance")("Name")
-                '    If ProcessList.Find(Function(x) x = expath) <> String.Empty Then RaiseEvent ProcessEvent(Mode, name)
-                RaiseEvent ProcessEvent(Mode, name)
-                'End If
-            End If
+            If e IsNot Nothing Then RaiseEvent ProcessEvent(Mode, e("TargetInstance")("Name"))
         End While
 
         watcher.Stop()

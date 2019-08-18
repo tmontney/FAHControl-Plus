@@ -50,8 +50,10 @@
             fw_d.AddWatchedProcess(app)
         Next
 
-        fw_c.Listen()
-        fw_d.Listen()
+        If My.Settings.fahUseConfApp Then
+            fw_c.Listen()
+            fw_d.Listen()
+        End If
 
         fw_a = New List(Of String)
 
@@ -106,6 +108,13 @@
 
     Private Sub exitMI_Click(sender As Object, e As EventArgs)
         Environment.Exit(0)
+    End Sub
+
+    Private Sub Main_Closing(sender As Object, e As EventArgs) Handles MyBase.Closing
+        fw_c.StopListening()
+        fw_d.StopListening()
+
+        fc.Disconnect()
     End Sub
 
     Private Sub SnoozeCycle(Optional ByVal Slots As List(Of FAH.Slot) = Nothing)
