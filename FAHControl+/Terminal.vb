@@ -1,9 +1,9 @@
 ﻿Public Class Terminal
-    Dim WithEvents tClient As FAH.Client
+    Dim WithEvents tClient As FAHClient.Client
     Private Sub connectRBTN_CheckedChanged(sender As Object, e As EventArgs) Handles connectRBTN.CheckedChanged
         If connectRBTN.Checked Then
             outputTXT.AppendText("Attempting to connect to " & My.Settings.fahClientHost & " on TCP port " & My.Settings.fahClientPort.ToString() & "..." & vbNewLine)
-            tClient = New FAH.Client
+            tClient = New FAHClient.Client
 
             commandLFCBX.Checked = tClient.SendLfOnCmd
 
@@ -27,9 +27,12 @@
         End If
     End Sub
 
-    Private Sub tClient_DataReceived(ByVal Data As String) Handles tClient.DataReceived
-        If crlfCBX.Checked Then Data = Data.Replace(vbLf, vbCrLf)
-        outputTXT_AppendText(Data)
+    Private Sub tClient_DataReceived(ByVal Data As String()) Handles tClient.DataReceived
+        For Each item As String In Data
+            If crlfCBX.Checked Then item = item.Replace(vbLf, vbCrLf)
+            outputTXT_AppendText(item)
+        Next
+
     End Sub
 
     Private Sub tClient_ConnectionMade() Handles tClient.ConnectionMade
@@ -64,7 +67,7 @@
     Private Sub sendrecvTestBTN_Click(sender As Object, e As EventArgs) Handles sendrecvTestBTN.Click
         tClient.ClearUpdates()
 
-        Dim testUpdate As New FAH.Update With {
+        Dim testUpdate As New FAHClient.Update With {
             .ID = 0,
             .Rate = 0,
             .Expression = "$(slot-info)"

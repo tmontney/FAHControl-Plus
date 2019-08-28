@@ -87,6 +87,7 @@ Partial Class Settings
         '
         'fahclientTestBTN
         '
+        Me.fahclientTestBTN.Enabled = False
         Me.fahclientTestBTN.Location = New System.Drawing.Point(57, 151)
         Me.fahclientTestBTN.Margin = New System.Windows.Forms.Padding(4)
         Me.fahclientTestBTN.Name = "fahclientTestBTN"

@@ -1,8 +1,8 @@
 ﻿Public Class Settings
-    Dim WithEvents fClient As FAH.Client
+    Dim WithEvents fClient As FAHClient.Client
     Dim confappLBXTT As ToolTip
     Private Sub fahclientTestBTN_Click(sender As Object, e As EventArgs) Handles fahclientTestBTN.Click
-        fClient = New FAH.Client
+        fClient = New FAHClient.Client
         fClient.Connect(fahclientAddressTXT.Text, fahclientPortTXT.Text)
     End Sub
 
@@ -15,15 +15,16 @@
         End If
     End Sub
 
-    Private Sub fClient_DataReceived(ByVal Data As String) Handles fClient.DataReceived
-        If Data = "4>" Then
-            MsgBox("Connection successful!")
-        Else
-            MsgBox("Connection failed.")
-        End If
+    '***Likely doesn't work. Disabling for now.***
+    'Private Sub fClient_DataReceived(ByVal Data As String()) Handles fClient.DataReceived
+    '    If Data = "4>" Then
+    '        MsgBox("Connection successful!")
+    '    Else
+    '        MsgBox("Connection failed.")
+    '    End If
 
-        fClient.Disconnect()
-    End Sub
+    '    fClient.Disconnect()
+    'End Sub
 
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         fahclientAddressTXT.Text = My.Settings.fahClientHost

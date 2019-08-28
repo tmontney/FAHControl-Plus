@@ -1,6 +1,6 @@
-﻿Namespace FAH
+﻿Namespace FAHClient
     Public Class Client : Implements IDisposable
-        Public Event DataReceived(ByVal Data As String)
+        Public Event DataReceived(ByVal Data As String())
         Public Event UpdateReceived(ByVal Data As String)
         Public Event ConnectionMade()
         Public Event ConnectionLost(ByVal PreviouslyConnected As Boolean)
@@ -55,8 +55,8 @@
             If StartOpenBracket <> -1 Then
                 Dim EndCloseBracket As Integer = Output.LastIndexOf("]")
                 If EndCloseBracket <> -1 Then
-                    Dim JsonStr As String = Output.Substring(StartOpenBracket, (EndCloseBracket - StartOpenBracket) + 1).Replace("False", Chr(34) & "False" & Chr(34)).Replace("True", Chr(34) & "True" & Chr(34))
-                    Return Newtonsoft.Json.JsonConvert.DeserializeObject(JsonStr, New Newtonsoft.Json.JsonSerializerSettings With {.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include})
+                    Dim JsonStr As String = Output.Substring(StartOpenBracket, (EndCloseBracket - StartOpenBracket) + 1).Replace("False", """False""").Replace("True", """True""")
+                    Return Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of Dictionary(Of String, Object)))(JsonStr, New Newtonsoft.Json.JsonSerializerSettings With {.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include})
                 End If
             End If
 
@@ -139,10 +139,10 @@
                     Exit While
                 Else
                     If Connecting = False Then
-                        If Updates.Count > 0 AndAlso Date.Now.AddMilliseconds(WaitMSecondsBeforeClassifyUpdateMessage) > LastCommandSend Then
-                            RaiseEvent UpdateReceived(Response)
+                        If SuppressDataReceivedEvents = 0 Then
+                            RaiseEvent DataReceived(Response.Split("---"))
                         Else
-                            If SuppressDataReceivedEvents = 0 Then RaiseEvent DataReceived(Response) Else SuppressDataReceivedEvents -= 1
+                            SuppressDataReceivedEvents -= 1
                         End If
                     End If
                 End If
@@ -200,20 +200,82 @@
         Public Property Rate As Integer
         Public Property Expression As String
 
+        Public Enum TypeEnum As Integer
+            Multiple = -2
+            Unknown = -1
+            Slot = 0
+            Queue = 1
+            Heartbeat = 2
+        End Enum
+
+        Public Shared Function TypeDetection(ByVal Data As String, Optional ByVal Exclude As TypeEnum = TypeEnum.Unknown) As TypeEnum
+            Dim InitialDetection As TypeEnum = TypeEnum.Unknown
+
+            If (Exclude <> TypeEnum.Slot AndAlso (Data.Contains("id") And Data.Contains("status"))) Then
+                InitialDetection = TypeEnum.Slot
+            ElseIf (Exclude <> TypeEnum.Queue AndAlso (Data.Contains("id") And Data.Contains("state"))) Then
+                InitialDetection = TypeEnum.Queue
+            ElseIf (Exclude <> TypeEnum.Heartbeat AndAlso (Data.Contains("heartbeat"))) Then
+                InitialDetection = TypeEnum.Heartbeat
+            End If
+
+            If InitialDetection <> TypeEnum.Unknown Then
+                Dim SecondDetection As TypeEnum = TypeDetection(Data, InitialDetection)
+                If SecondDetection <> TypeEnum.Unknown And InitialDetection <> SecondDetection Then InitialDetection = TypeEnum.Multiple
+            End If
+
+            Return InitialDetection
+        End Function
+
+        Public Shared Function TryParse(ByVal Data As Object, ByVal T As TypeEnum, ByRef Result As Boolean) As Object
+            Dim ReturnData As Object = Nothing
+            Result = False
+
+            If T = TypeEnum.Heartbeat Then
+                ReturnData = HeartbeatFromString(Data)
+                If ReturnData <> "-1" Then Result = True
+            ElseIf T = TypeEnum.Queue Then
+                ReturnData = Queue.FromString(Data)
+                If ReturnData.Count > 0 Then Result = True
+            ElseIf T = TypeEnum.Slot Then
+                ReturnData = Slot.FromString(Data)
+                If ReturnData.Count > 0 Then Result = True
+            End If
+
+            Return ReturnData
+        End Function
+
         Public Shared Function FromString(ByVal Data As String) As List(Of Update)
             Dim Updates As New List(Of Update)
 
             For Each line As String In Data.Split(vbNewLine).Where(Function(x) x <> String.Empty)
                 Dim l() As String = line.Split(" ")
+                Dim u As New Update With {
+                .ID = l(0),
+                .Rate = l(1)
+            }
+                If l(2).Contains(" ") Then u.Expression = "$(" & l(2) & ")" Else u.Expression = "$" & l(2)
 
-                Updates.Add(New Update With {
-                    .ID = l(0),
-                    .Rate = l(1),
-                    .Expression = l(2)
-                })
+                Updates.Add(u)
             Next
 
             Return Updates
+        End Function
+
+        Public Shared Function HeartbeatFromString(ByVal Data As String) As String
+            Try
+                Dim sIndex As Integer = Data.IndexOf("heartbeat")
+                If sIndex <> -1 Then
+                    Dim eIndex As Integer = Data.IndexOf("-")
+                    If eIndex <> -1 Then
+                        Return Data.Substring(sIndex + 9, eIndex - (sIndex + 9)).Trim()
+                    End If
+                End If
+            Catch ex As Exception
+                Return -1
+            End Try
+
+            Return -1
         End Function
 
         Public Overrides Function ToString() As String
@@ -235,7 +297,7 @@
 
         Public Shared Function FromString(ByVal Data As String) As List(Of Slot)
             Try
-                Dim SlotObj As Object = FAH.Client.FAHOutputStrToObject(Data)
+                Dim SlotObj As Object = Client.FAHOutputStrToObject(Data)
                 Dim Slots As New List(Of Slot)
                 For Each item As Object In SlotObj
                     Dim s As New Slot With {
@@ -270,6 +332,66 @@
 
             Return Slots
         End Function
+
+        Public Overrides Function ToString() As String
+            Return Newtonsoft.Json.JsonConvert.SerializeObject(Me)
+        End Function
+    End Class
+
+    Public Class Queue
+        Public Property ID As String
+        Public Property State As String
+        Public Property Error_ As String
+        Public Property Project As String
+        Public Property Run As String
+        Public Property Clone As String
+        Public Property Gen As String
+        Public Property Core As String
+        Public Property Unit As String
+        Public Property PercentDone As String
+        Public Property ETA As String
+        Public Property PPD As String
+        Public Property CreditEstimate As String
+        Public Property WaitingOn As String
+        Public Property NextAttempt As String
+        Public Property TimeRemaining As String
+        Public Property TotalFrames As String
+        Public Property FramesDone As String
+        Public Property Assigned As String
+        Public Property Timeout As String
+        Public Property Deadline As String
+        Public Property WS As String
+        Public Property CS As String
+        Public Property Attempts As String
+        Public Property Slot As String
+        Public Property TPF As String
+        Public Property BaseCredit As String
+
+        Public Shared Function FromString(ByVal Data As String) As List(Of Queue)
+            Dim Queue As New List(Of Queue)
+
+            Try
+                Dim QueueObj As Object = Client.FAHOutputStrToObject(Data)
+                For Each item In QueueObj
+                    Dim q As New Queue
+                    For Each p As Reflection.PropertyInfo In q.GetType().GetProperties()
+                        p.SetValue(q, item(p.Name.Replace("_", "").ToLower()).ToString())
+                    Next
+                    Queue.Add(q)
+                Next
+            Catch ex As Exception
+                Return New List(Of Queue)
+            End Try
+
+            Return Queue
+        End Function
+
+        Public Function ToString2() As String
+            Return "Slot " & Slot & " running PRCG " & Project & "|" & Run & "|" & Clone & "|" & Gen & " is " & PercentDone & " done, with an estimated credit of " & CreditEstimate & "."
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return Newtonsoft.Json.JsonConvert.SerializeObject(Me)
+        End Function
     End Class
 End Namespace
-
