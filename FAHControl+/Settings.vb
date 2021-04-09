@@ -2,8 +2,17 @@
     Dim WithEvents fClient As FAHClient.Client
     Dim confappLBXTT As ToolTip
     Private Sub fahclientTestBTN_Click(sender As Object, e As EventArgs) Handles fahclientTestBTN.Click
-        fClient = New FAHClient.Client
-        fClient.Connect(fahclientAddressTXT.Text, fahclientPortTXT.Text)
+        Logger.Write("Testing connection to FAHClient", "Settings")
+        Using fclient As New FAHClient.Client
+            fclient.Connect(False, fahclientAddressTXT.Text, fahclientPortTXT.Text)
+            If fclient.Connected Then
+                Logger.Write("Test was successful.", "Settings")
+                MsgBox("Test successful!")
+            Else
+                Logger.Write("Test was not successful", "Settings")
+                MsgBox("Test failed! Please ensure FAHClient is listening on port " & fahclientPortTXT.Text & ".")
+            End If
+        End Using
     End Sub
 
     Private Sub fClient_ConnectionMade() Handles fClient.ConnectionMade

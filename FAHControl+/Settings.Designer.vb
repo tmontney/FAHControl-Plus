@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Settings
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Settings
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.fahclientGBX = New System.Windows.Forms.GroupBox()
         Me.fahclientPasswordTXT = New System.Windows.Forms.TextBox()
@@ -69,6 +69,7 @@ Partial Class Settings
         '
         'fahclientPasswordTXT
         '
+        Me.fahclientPasswordTXT.Enabled = False
         Me.fahclientPasswordTXT.Location = New System.Drawing.Point(76, 102)
         Me.fahclientPasswordTXT.Margin = New System.Windows.Forms.Padding(4)
         Me.fahclientPasswordTXT.Name = "fahclientPasswordTXT"
@@ -87,7 +88,6 @@ Partial Class Settings
         '
         'fahclientTestBTN
         '
-        Me.fahclientTestBTN.Enabled = False
         Me.fahclientTestBTN.Location = New System.Drawing.Point(57, 151)
         Me.fahclientTestBTN.Margin = New System.Windows.Forms.Padding(4)
         Me.fahclientTestBTN.Name = "fahclientTestBTN"
@@ -119,7 +119,6 @@ Partial Class Settings
         Me.fahclientAddressTXT.Location = New System.Drawing.Point(76, 38)
         Me.fahclientAddressTXT.Margin = New System.Windows.Forms.Padding(4)
         Me.fahclientAddressTXT.Name = "fahclientAddressTXT"
-        Me.fahclientAddressTXT.ReadOnly = True
         Me.fahclientAddressTXT.Size = New System.Drawing.Size(96, 22)
         Me.fahclientAddressTXT.TabIndex = 1
         Me.fahclientAddressTXT.Text = "localhost"
@@ -136,7 +135,7 @@ Partial Class Settings
         '
         'saveBTN
         '
-        Me.saveBTN.Location = New System.Drawing.Point(36, 672)
+        Me.saveBTN.Location = New System.Drawing.Point(27, 603)
         Me.saveBTN.Margin = New System.Windows.Forms.Padding(4)
         Me.saveBTN.Name = "saveBTN"
         Me.saveBTN.Size = New System.Drawing.Size(100, 28)
@@ -146,7 +145,7 @@ Partial Class Settings
         '
         'cancelBTN
         '
-        Me.cancelBTN.Location = New System.Drawing.Point(144, 672)
+        Me.cancelBTN.Location = New System.Drawing.Point(135, 603)
         Me.cancelBTN.Margin = New System.Windows.Forms.Padding(4)
         Me.cancelBTN.Name = "cancelBTN"
         Me.cancelBTN.Size = New System.Drawing.Size(100, 28)
@@ -261,7 +260,7 @@ Partial Class Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(270, 723)
+        Me.ClientSize = New System.Drawing.Size(270, 657)
         Me.Controls.Add(Me.confappGBX)
         Me.Controls.Add(Me.slotwhitelistGBX)
         Me.Controls.Add(Me.snoozeGBX)
@@ -271,7 +270,7 @@ Partial Class Settings
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "Settings"
-        Me.Text = "FAHControl+ Settings"
+        Me.Text = "Settings"
         Me.fahclientGBX.ResumeLayout(False)
         Me.fahclientGBX.PerformLayout()
         Me.snoozeGBX.ResumeLayout(False)

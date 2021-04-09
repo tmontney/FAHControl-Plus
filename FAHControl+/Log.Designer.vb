@@ -46,21 +46,27 @@ Partial Class Log
         '
         'timestamp
         '
+        Me.timestamp.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.timestamp.HeaderText = "Timestamp"
         Me.timestamp.Name = "timestamp"
         Me.timestamp.ReadOnly = True
+        Me.timestamp.Width = 106
         '
         'component
         '
+        Me.component.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.component.HeaderText = "Component"
         Me.component.Name = "component"
         Me.component.ReadOnly = True
+        Me.component.Width = 109
         '
         'message
         '
+        Me.message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.message.HeaderText = "Message"
         Me.message.Name = "message"
         Me.message.ReadOnly = True
+        Me.message.Width = 94
         '
         'Log
         '
@@ -75,9 +81,8 @@ Partial Class Log
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents logDGV As DataGridView
     Friend WithEvents timestamp As DataGridViewTextBoxColumn
     Friend WithEvents component As DataGridViewTextBoxColumn
     Friend WithEvents message As DataGridViewTextBoxColumn
+    Private WithEvents logDGV As DataGridView
 End Class

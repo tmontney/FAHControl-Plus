@@ -8,8 +8,6 @@
 
     Dim fw_a As List(Of String)
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Log.Write("Program start")
-
         Me.Visible = False
         Me.WindowState = FormWindowState.Minimized
         Me.ShowInTaskbar = False
@@ -49,6 +47,9 @@
             .Visible = True,
             .ContextMenu = cm
         }
+
+        Logger.InitializeLog(trayControl)
+        Logger.Write("Program start")
 
         fw_c = New ProcessWatcher(ProcessWatcher.ModeEnum.Creation)
         fw_d = New ProcessWatcher(ProcessWatcher.ModeEnum.Deletion)
@@ -119,7 +120,7 @@
     End Sub
 
     Private Sub OnProcessExit(sender As Object, e As EventArgs)
-        Log.Write("Program end")
+        Logger.Write("Program end")
 
         fw_c.StopListening()
         fw_d.StopListening()
@@ -130,7 +131,7 @@
     Private Sub SnoozeCycle(Optional ByVal Slots As List(Of FAHClient.Slot) = Nothing)
         Dim SleepValue As Integer = My.Settings.fahSnoozeValue * 60 * 1000
 
-        Log.Write("Running cycle", "Snooze")
+        Logger.Write("Running cycle", "Snooze")
         Snooze(Slots)
         Threading.Thread.Sleep(SleepValue)
         Wake(Slots)
@@ -141,7 +142,7 @@
 
         For Each Slot In Slots
             Dim PauseResponses As List(Of String) = fc.SendReceiveCommand("pause " & Slot.ID, 2, 3000)
-            Log.Write("Pausing slot " & Slot.ID)
+            Logger.Write("Pausing slot " & Slot.ID)
             Dim PauseLastResponse As New List(Of FAHClient.Slot)
             If PauseResponses.Count > 0 Then Else If FAHClient.Slot.FromString(PauseResponses.Last()).Where(Function(x) x.Status = "RUNNING").Count < 0 Then Return False
         Next
@@ -155,7 +156,7 @@
 
         For Each Slot In Slots
             Dim UnPauseResponses As List(Of String) = fc.SendReceiveCommand("unpause " & Slot.ID, 2, 3000)
-            Log.Write("Unpausing slot " & Slot.ID)
+            Logger.Write("Unpausing slot " & Slot.ID)
             Dim UnPauseLastResponse As New List(Of FAHClient.Slot)
             If UnPauseResponses.Count > 0 Then Else If FAHClient.Slot.FromString(UnPauseResponses.Last()).Where(Function(x) x.Status = "PAUSED").Count < 0 Then Return False
         Next
@@ -166,20 +167,23 @@
 
     Private Sub fc_ConnectionMade() Handles fc.ConnectionMade
         trayControl.ContextMenu.MenuItems.Item(0).Checked = True
+        Logger.Write("Connected successfully to FAHClient.", "FAHClient")
     End Sub
 
     Private Sub fc_ConnectionLost(ByVal PreviouslyConnected As Boolean) Handles fc.ConnectionLost
         trayControl.ContextMenu.MenuItems.Item(0).Checked = False
+        Logger.Write("Lost connection to FAHClient.", "FAHClient")
     End Sub
 
     Private Sub connectionMI_Click(sender As Object, e As EventArgs)
+        Logger.Write("User clicked the connection button")
         If trayControl.ContextMenu.MenuItems.Item(0).Checked Then fc.Disconnect() Else fc.Connect(False)
     End Sub
 
     Private Sub fw_ProcessEvent(ByVal Mode As ProcessWatcher.ModeEnum, ByVal ProcessName As String) Handles fw_c.ProcessEvent, fw_d.ProcessEvent
         If Mode = ProcessWatcher.ModeEnum.Creation Then fw_a.Add(ProcessName) Else If fw_a.Find(Function(x) x = ProcessName) <> String.Empty Then fw_a.Remove(ProcessName)
         If My.Settings.fahSlotWhitelist.Split(",").Length > 0 Then
-            Log.Write("Running cycle", "ConfApp")
+            Logger.Write("Running cycle", "ConfApp")
             For Each slot As String In My.Settings.fahSlotWhitelist.Split(",")
                 If fw_a.Count > 0 Then fc.Pause(slot) Else fc.Unpause(slot)
             Next
@@ -196,5 +200,4 @@
     Private Sub logMI_Click(sender As Object, e As EventArgs)
         Log.ShowDialog()
     End Sub
-
 End Class
