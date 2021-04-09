@@ -39,6 +39,7 @@
                 tClient = New Net.Sockets.TcpClient(host, port)
             Catch ex As Exception
                 SetConnectionLost()
+                Exit Sub
             End Try
 
             _Connected = tClient.Connected

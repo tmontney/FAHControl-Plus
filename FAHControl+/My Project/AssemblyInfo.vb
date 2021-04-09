@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -9,10 +10,10 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("FAHControl+")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyDescription("A helper program for Folding@Home program FAHClient: https://github.com/tmontney/FAHControl-Plus." & vbNewLine & vbNewLine & "Includes third party software Newtonsoft: https://www.newtonsoft.com/json")>
+<Assembly: AssemblyCompany("W3G")>
 <Assembly: AssemblyProduct("FAHControl+")>
-<Assembly: AssemblyCopyright("Copyright ©  2019")>
+<Assembly: AssemblyCopyright("Copyright ©  2021")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -32,3 +33,4 @@ Imports System.Runtime.InteropServices
 ' <Assembly: AssemblyVersion("1.0.*")>
 
 <Assembly: AssemblyVersion("1.0.0.*")>
+<Assembly: NeutralResourcesLanguage("en-US")>

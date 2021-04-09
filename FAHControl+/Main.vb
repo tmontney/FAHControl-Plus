@@ -14,7 +14,7 @@
 
         AddHandler AppDomain.CurrentDomain.ProcessExit, AddressOf OnProcessExit
 
-        Dim connectionMI As New MenuItem("Connected")
+        Dim connectionMI As New MenuItem("Connect")
         AddHandler connectionMI.Click, AddressOf connectionMI_Click
 
         Dim snoozeMI As New MenuItem("Snooze")
@@ -29,6 +29,9 @@
         Dim settingsMI As New MenuItem("Settings")
         AddHandler settingsMI.Click, AddressOf settingsMI_Click
 
+        Dim aboutMI As New MenuItem("About")
+        AddHandler aboutMI.Click, AddressOf aboutMI_Click
+
         Dim exitMI As New MenuItem("Exit")
         AddHandler exitMI.Click, AddressOf exitMI_Click
 
@@ -39,6 +42,7 @@
             .Add(spacerMI)
             .Add(logMI)
             .Add(settingsMI)
+            .Add(aboutMI)
             .Add(exitMI)
         End With
 
@@ -113,6 +117,10 @@
             fw_c.StopListening()
             fw_d.StopListening()
         End If
+    End Sub
+
+    Private Sub aboutMI_Click(sender As Object, e As EventArgs)
+        About.ShowDialog()
     End Sub
 
     Private Sub exitMI_Click(sender As Object, e As EventArgs)
