@@ -7,7 +7,7 @@
 
             commandLFCBX.Checked = tClient.SendLfOnCmd
 
-            tClient.Connect(My.Settings.fahClientHost, My.Settings.fahClientPort)
+            tClient.Connect(True, My.Settings.fahClientHost, My.Settings.fahClientPort)
         End If
     End Sub
 
@@ -32,11 +32,10 @@
             If crlfCBX.Checked Then item = item.Replace(vbLf, vbCrLf)
             outputTXT_AppendText(item)
         Next
-
     End Sub
 
-    Private Sub tClient_ConnectionMade() Handles tClient.ConnectionMade
-
+    Private Sub tClient_ExceptionOccurred(ByVal Component As String, ByVal Exception As Exception) Handles tClient.ExceptionOccurred
+        Logger.Write("Exception occurred for component " & Component & ": " & Exception.Message, "Terminal")
     End Sub
 
     Private Sub tClient_ConnectionLost(ByVal PreviouslyConnected As Boolean) Handles tClient.ConnectionLost
@@ -47,13 +46,7 @@
     End Sub
 
     Private Sub commandBTN_Click(sender As Object, e As EventArgs) Handles commandBTN.Click
-        Dim cmd As String = commandTXT.Text
-
-        If commandCRCBX.Checked Then cmd += vbCr
-        If commandLFCBX.Checked Then cmd += vbLf
-
-        outputTXT.AppendText(commandTXT.Text & vbNewLine)
-        tClient.SendCommand(cmd)
+        SendCommand(commandTXT.Text)
     End Sub
 
     Private Sub Terminal_Closing(sender As Object, e As EventArgs) Handles MyBase.Closing
@@ -87,5 +80,17 @@
         Next
 
         tClient.ClearUpdates()
+    End Sub
+
+    Private Sub commandTXT_TextChanged(sender As Object, e As KeyEventArgs) Handles commandTXT.KeyUp
+        If e.KeyCode = Keys.Enter Then SendCommand(commandTXT.Text)
+    End Sub
+
+    Private Sub SendCommand(ByVal cmd As String)
+        If commandCRCBX.Checked Then cmd += vbCr
+        If commandLFCBX.Checked Then cmd += vbLf
+
+        outputTXT.AppendText(commandTXT.Text & vbNewLine)
+        tClient.SendCommand(cmd)
     End Sub
 End Class

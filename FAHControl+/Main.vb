@@ -100,7 +100,9 @@
     End Sub
 
     Private Sub settingsMI_Click(sender As Object, e As EventArgs)
-        Settings.ShowDialog()
+        Using settingsDLG As New Settings(fc)
+            settingsDLG.ShowDialog()
+        End Using
 
         If My.Settings.fahUseConfApp Then
             fw_c.ClearWatchedProcesses()

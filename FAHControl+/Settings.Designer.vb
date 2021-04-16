@@ -36,16 +36,19 @@ Partial Class Settings
         Me.fahSnoozeTXT = New System.Windows.Forms.TextBox()
         Me.snoozeLBL = New System.Windows.Forms.Label()
         Me.slotwhitelistGBX = New System.Windows.Forms.GroupBox()
-        Me.slotidsLBL = New System.Windows.Forms.Label()
-        Me.slotidsTXT = New System.Windows.Forms.TextBox()
+        Me.slotsDGV = New System.Windows.Forms.DataGridView()
         Me.confappGBX = New System.Windows.Forms.GroupBox()
         Me.confappAddBTN = New System.Windows.Forms.Button()
         Me.confappRemBTN = New System.Windows.Forms.Button()
         Me.confappsCBX = New System.Windows.Forms.CheckBox()
         Me.confappLBX = New System.Windows.Forms.ListBox()
+        Me.SlotID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SlotName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Whitelisted = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.fahclientGBX.SuspendLayout()
         Me.snoozeGBX.SuspendLayout()
         Me.slotwhitelistGBX.SuspendLayout()
+        CType(Me.slotsDGV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.confappGBX.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -58,11 +61,9 @@ Partial Class Settings
         Me.fahclientGBX.Controls.Add(Me.fahclientPortLBL)
         Me.fahclientGBX.Controls.Add(Me.fahclientAddressTXT)
         Me.fahclientGBX.Controls.Add(Me.fahclientAddressLBL)
-        Me.fahclientGBX.Location = New System.Drawing.Point(16, 15)
-        Me.fahclientGBX.Margin = New System.Windows.Forms.Padding(4)
+        Me.fahclientGBX.Location = New System.Drawing.Point(12, 12)
         Me.fahclientGBX.Name = "fahclientGBX"
-        Me.fahclientGBX.Padding = New System.Windows.Forms.Padding(4)
-        Me.fahclientGBX.Size = New System.Drawing.Size(225, 187)
+        Me.fahclientGBX.Size = New System.Drawing.Size(169, 152)
         Me.fahclientGBX.TabIndex = 0
         Me.fahclientGBX.TabStop = False
         Me.fahclientGBX.Text = "FAHClient Connection"
@@ -70,85 +71,76 @@ Partial Class Settings
         'fahclientPasswordTXT
         '
         Me.fahclientPasswordTXT.Enabled = False
-        Me.fahclientPasswordTXT.Location = New System.Drawing.Point(76, 102)
-        Me.fahclientPasswordTXT.Margin = New System.Windows.Forms.Padding(4)
+        Me.fahclientPasswordTXT.Location = New System.Drawing.Point(57, 83)
         Me.fahclientPasswordTXT.Name = "fahclientPasswordTXT"
-        Me.fahclientPasswordTXT.Size = New System.Drawing.Size(96, 22)
+        Me.fahclientPasswordTXT.Size = New System.Drawing.Size(73, 20)
         Me.fahclientPasswordTXT.TabIndex = 5
         '
         'fahclientPasswordLBL
         '
         Me.fahclientPasswordLBL.AutoSize = True
-        Me.fahclientPasswordLBL.Location = New System.Drawing.Point(8, 106)
-        Me.fahclientPasswordLBL.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.fahclientPasswordLBL.Location = New System.Drawing.Point(6, 86)
         Me.fahclientPasswordLBL.Name = "fahclientPasswordLBL"
-        Me.fahclientPasswordLBL.Size = New System.Drawing.Size(69, 17)
+        Me.fahclientPasswordLBL.Size = New System.Drawing.Size(53, 13)
         Me.fahclientPasswordLBL.TabIndex = 4
         Me.fahclientPasswordLBL.Text = "Password"
         '
         'fahclientTestBTN
         '
-        Me.fahclientTestBTN.Location = New System.Drawing.Point(57, 151)
-        Me.fahclientTestBTN.Margin = New System.Windows.Forms.Padding(4)
+        Me.fahclientTestBTN.Location = New System.Drawing.Point(43, 123)
         Me.fahclientTestBTN.Name = "fahclientTestBTN"
-        Me.fahclientTestBTN.Size = New System.Drawing.Size(100, 28)
+        Me.fahclientTestBTN.Size = New System.Drawing.Size(75, 23)
         Me.fahclientTestBTN.TabIndex = 1
         Me.fahclientTestBTN.Text = "Test"
         Me.fahclientTestBTN.UseVisualStyleBackColor = True
         '
         'fahclientPortTXT
         '
-        Me.fahclientPortTXT.Location = New System.Drawing.Point(76, 70)
-        Me.fahclientPortTXT.Margin = New System.Windows.Forms.Padding(4)
+        Me.fahclientPortTXT.Location = New System.Drawing.Point(57, 57)
         Me.fahclientPortTXT.Name = "fahclientPortTXT"
-        Me.fahclientPortTXT.Size = New System.Drawing.Size(96, 22)
+        Me.fahclientPortTXT.Size = New System.Drawing.Size(73, 20)
         Me.fahclientPortTXT.TabIndex = 3
         '
         'fahclientPortLBL
         '
         Me.fahclientPortLBL.AutoSize = True
-        Me.fahclientPortLBL.Location = New System.Drawing.Point(8, 74)
-        Me.fahclientPortLBL.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.fahclientPortLBL.Location = New System.Drawing.Point(6, 60)
         Me.fahclientPortLBL.Name = "fahclientPortLBL"
-        Me.fahclientPortLBL.Size = New System.Drawing.Size(34, 17)
+        Me.fahclientPortLBL.Size = New System.Drawing.Size(26, 13)
         Me.fahclientPortLBL.TabIndex = 2
         Me.fahclientPortLBL.Text = "Port"
         '
         'fahclientAddressTXT
         '
-        Me.fahclientAddressTXT.Location = New System.Drawing.Point(76, 38)
-        Me.fahclientAddressTXT.Margin = New System.Windows.Forms.Padding(4)
+        Me.fahclientAddressTXT.Location = New System.Drawing.Point(57, 31)
         Me.fahclientAddressTXT.Name = "fahclientAddressTXT"
-        Me.fahclientAddressTXT.Size = New System.Drawing.Size(96, 22)
+        Me.fahclientAddressTXT.Size = New System.Drawing.Size(73, 20)
         Me.fahclientAddressTXT.TabIndex = 1
         Me.fahclientAddressTXT.Text = "localhost"
         '
         'fahclientAddressLBL
         '
         Me.fahclientAddressLBL.AutoSize = True
-        Me.fahclientAddressLBL.Location = New System.Drawing.Point(8, 42)
-        Me.fahclientAddressLBL.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.fahclientAddressLBL.Location = New System.Drawing.Point(6, 34)
         Me.fahclientAddressLBL.Name = "fahclientAddressLBL"
-        Me.fahclientAddressLBL.Size = New System.Drawing.Size(60, 17)
+        Me.fahclientAddressLBL.Size = New System.Drawing.Size(45, 13)
         Me.fahclientAddressLBL.TabIndex = 0
         Me.fahclientAddressLBL.Text = "Address"
         '
         'saveBTN
         '
-        Me.saveBTN.Location = New System.Drawing.Point(27, 603)
-        Me.saveBTN.Margin = New System.Windows.Forms.Padding(4)
+        Me.saveBTN.Location = New System.Drawing.Point(105, 432)
         Me.saveBTN.Name = "saveBTN"
-        Me.saveBTN.Size = New System.Drawing.Size(100, 28)
+        Me.saveBTN.Size = New System.Drawing.Size(75, 23)
         Me.saveBTN.TabIndex = 1
         Me.saveBTN.Text = "Save"
         Me.saveBTN.UseVisualStyleBackColor = True
         '
         'cancelBTN
         '
-        Me.cancelBTN.Location = New System.Drawing.Point(135, 603)
-        Me.cancelBTN.Margin = New System.Windows.Forms.Padding(4)
+        Me.cancelBTN.Location = New System.Drawing.Point(186, 432)
         Me.cancelBTN.Name = "cancelBTN"
-        Me.cancelBTN.Size = New System.Drawing.Size(100, 28)
+        Me.cancelBTN.Size = New System.Drawing.Size(75, 23)
         Me.cancelBTN.TabIndex = 2
         Me.cancelBTN.Text = "Cancel"
         Me.cancelBTN.UseVisualStyleBackColor = True
@@ -157,54 +149,55 @@ Partial Class Settings
         '
         Me.snoozeGBX.Controls.Add(Me.fahSnoozeTXT)
         Me.snoozeGBX.Controls.Add(Me.snoozeLBL)
-        Me.snoozeGBX.Location = New System.Drawing.Point(16, 209)
+        Me.snoozeGBX.Location = New System.Drawing.Point(11, 169)
+        Me.snoozeGBX.Margin = New System.Windows.Forms.Padding(2)
         Me.snoozeGBX.Name = "snoozeGBX"
-        Me.snoozeGBX.Size = New System.Drawing.Size(225, 61)
+        Me.snoozeGBX.Padding = New System.Windows.Forms.Padding(2)
+        Me.snoozeGBX.Size = New System.Drawing.Size(169, 50)
         Me.snoozeGBX.TabIndex = 3
         Me.snoozeGBX.TabStop = False
+        Me.snoozeGBX.Text = "Snooze Button"
         '
         'fahSnoozeTXT
         '
-        Me.fahSnoozeTXT.Location = New System.Drawing.Point(128, 15)
+        Me.fahSnoozeTXT.Location = New System.Drawing.Point(97, 16)
+        Me.fahSnoozeTXT.Margin = New System.Windows.Forms.Padding(2)
         Me.fahSnoozeTXT.Name = "fahSnoozeTXT"
-        Me.fahSnoozeTXT.Size = New System.Drawing.Size(61, 22)
+        Me.fahSnoozeTXT.Size = New System.Drawing.Size(47, 20)
         Me.fahSnoozeTXT.TabIndex = 1
         '
         'snoozeLBL
         '
         Me.snoozeLBL.AutoSize = True
-        Me.snoozeLBL.Location = New System.Drawing.Point(3, 18)
+        Me.snoozeLBL.Location = New System.Drawing.Point(4, 19)
+        Me.snoozeLBL.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.snoozeLBL.Name = "snoozeLBL"
-        Me.snoozeLBL.Size = New System.Drawing.Size(119, 17)
+        Me.snoozeLBL.Size = New System.Drawing.Size(89, 13)
         Me.snoozeLBL.TabIndex = 0
         Me.snoozeLBL.Text = "Snooze (Minutes)"
         '
         'slotwhitelistGBX
         '
-        Me.slotwhitelistGBX.Controls.Add(Me.slotidsLBL)
-        Me.slotwhitelistGBX.Controls.Add(Me.slotidsTXT)
-        Me.slotwhitelistGBX.Location = New System.Drawing.Point(16, 276)
+        Me.slotwhitelistGBX.Controls.Add(Me.slotsDGV)
+        Me.slotwhitelistGBX.Location = New System.Drawing.Point(21, 223)
+        Me.slotwhitelistGBX.Margin = New System.Windows.Forms.Padding(2)
         Me.slotwhitelistGBX.Name = "slotwhitelistGBX"
-        Me.slotwhitelistGBX.Size = New System.Drawing.Size(225, 67)
+        Me.slotwhitelistGBX.Padding = New System.Windows.Forms.Padding(2)
+        Me.slotwhitelistGBX.Size = New System.Drawing.Size(353, 204)
         Me.slotwhitelistGBX.TabIndex = 4
         Me.slotwhitelistGBX.TabStop = False
-        Me.slotwhitelistGBX.Text = "Slot Whitelist"
+        Me.slotwhitelistGBX.Text = "Controlled Slots"
         '
-        'slotidsLBL
+        'slotsDGV
         '
-        Me.slotidsLBL.AutoSize = True
-        Me.slotidsLBL.Location = New System.Drawing.Point(8, 24)
-        Me.slotidsLBL.Name = "slotidsLBL"
-        Me.slotidsLBL.Size = New System.Drawing.Size(56, 17)
-        Me.slotidsLBL.TabIndex = 1
-        Me.slotidsLBL.Text = "Slot IDs"
-        '
-        'slotidsTXT
-        '
-        Me.slotidsTXT.Location = New System.Drawing.Point(70, 21)
-        Me.slotidsTXT.Name = "slotidsTXT"
-        Me.slotidsTXT.Size = New System.Drawing.Size(149, 22)
-        Me.slotidsTXT.TabIndex = 0
+        Me.slotsDGV.AllowUserToAddRows = False
+        Me.slotsDGV.AllowUserToDeleteRows = False
+        Me.slotsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.slotsDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SlotID, Me.SlotName, Me.Whitelisted})
+        Me.slotsDGV.Location = New System.Drawing.Point(5, 30)
+        Me.slotsDGV.Name = "slotsDGV"
+        Me.slotsDGV.Size = New System.Drawing.Size(343, 160)
+        Me.slotsDGV.TabIndex = 2
         '
         'confappGBX
         '
@@ -212,27 +205,31 @@ Partial Class Settings
         Me.confappGBX.Controls.Add(Me.confappRemBTN)
         Me.confappGBX.Controls.Add(Me.confappsCBX)
         Me.confappGBX.Controls.Add(Me.confappLBX)
-        Me.confappGBX.Location = New System.Drawing.Point(16, 349)
+        Me.confappGBX.Location = New System.Drawing.Point(186, 12)
+        Me.confappGBX.Margin = New System.Windows.Forms.Padding(2)
         Me.confappGBX.Name = "confappGBX"
-        Me.confappGBX.Size = New System.Drawing.Size(225, 236)
+        Me.confappGBX.Padding = New System.Windows.Forms.Padding(2)
+        Me.confappGBX.Size = New System.Drawing.Size(169, 192)
         Me.confappGBX.TabIndex = 5
         Me.confappGBX.TabStop = False
         Me.confappGBX.Text = "Conflicting Apps"
         '
         'confappAddBTN
         '
-        Me.confappAddBTN.Location = New System.Drawing.Point(193, 97)
+        Me.confappAddBTN.Location = New System.Drawing.Point(145, 79)
+        Me.confappAddBTN.Margin = New System.Windows.Forms.Padding(2)
         Me.confappAddBTN.Name = "confappAddBTN"
-        Me.confappAddBTN.Size = New System.Drawing.Size(30, 23)
+        Me.confappAddBTN.Size = New System.Drawing.Size(22, 19)
         Me.confappAddBTN.TabIndex = 3
         Me.confappAddBTN.Text = "+"
         Me.confappAddBTN.UseVisualStyleBackColor = True
         '
         'confappRemBTN
         '
-        Me.confappRemBTN.Location = New System.Drawing.Point(193, 126)
+        Me.confappRemBTN.Location = New System.Drawing.Point(145, 102)
+        Me.confappRemBTN.Margin = New System.Windows.Forms.Padding(2)
         Me.confappRemBTN.Name = "confappRemBTN"
-        Me.confappRemBTN.Size = New System.Drawing.Size(28, 23)
+        Me.confappRemBTN.Size = New System.Drawing.Size(21, 19)
         Me.confappRemBTN.TabIndex = 2
         Me.confappRemBTN.Text = "-"
         Me.confappRemBTN.UseVisualStyleBackColor = True
@@ -240,9 +237,10 @@ Partial Class Settings
         'confappsCBX
         '
         Me.confappsCBX.AutoSize = True
-        Me.confappsCBX.Location = New System.Drawing.Point(57, 35)
+        Me.confappsCBX.Location = New System.Drawing.Point(43, 28)
+        Me.confappsCBX.Margin = New System.Windows.Forms.Padding(2)
         Me.confappsCBX.Name = "confappsCBX"
-        Me.confappsCBX.Size = New System.Drawing.Size(82, 21)
+        Me.confappsCBX.Size = New System.Drawing.Size(65, 17)
         Me.confappsCBX.TabIndex = 1
         Me.confappsCBX.Text = "Enabled"
         Me.confappsCBX.UseVisualStyleBackColor = True
@@ -250,17 +248,38 @@ Partial Class Settings
         'confappLBX
         '
         Me.confappLBX.FormattingEnabled = True
-        Me.confappLBX.ItemHeight = 16
-        Me.confappLBX.Location = New System.Drawing.Point(6, 62)
+        Me.confappLBX.Location = New System.Drawing.Point(4, 50)
+        Me.confappLBX.Margin = New System.Windows.Forms.Padding(2)
         Me.confappLBX.Name = "confappLBX"
-        Me.confappLBX.Size = New System.Drawing.Size(183, 148)
+        Me.confappLBX.Size = New System.Drawing.Size(138, 121)
         Me.confappLBX.TabIndex = 0
+        '
+        'SlotID
+        '
+        Me.SlotID.HeaderText = "Slot ID"
+        Me.SlotID.Name = "SlotID"
+        Me.SlotID.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.SlotID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SlotName
+        '
+        Me.SlotName.HeaderText = "Name"
+        Me.SlotName.Name = "SlotName"
+        Me.SlotName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.SlotName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Whitelisted
+        '
+        Me.Whitelisted.HeaderText = "Enabled"
+        Me.Whitelisted.Name = "Whitelisted"
+        Me.Whitelisted.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Whitelisted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         '
         'Settings
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(270, 657)
+        Me.ClientSize = New System.Drawing.Size(385, 477)
         Me.Controls.Add(Me.confappGBX)
         Me.Controls.Add(Me.slotwhitelistGBX)
         Me.Controls.Add(Me.snoozeGBX)
@@ -268,7 +287,6 @@ Partial Class Settings
         Me.Controls.Add(Me.saveBTN)
         Me.Controls.Add(Me.fahclientGBX)
         Me.KeyPreview = True
-        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "Settings"
         Me.Text = "Settings"
         Me.fahclientGBX.ResumeLayout(False)
@@ -276,7 +294,7 @@ Partial Class Settings
         Me.snoozeGBX.ResumeLayout(False)
         Me.snoozeGBX.PerformLayout()
         Me.slotwhitelistGBX.ResumeLayout(False)
-        Me.slotwhitelistGBX.PerformLayout()
+        CType(Me.slotsDGV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.confappGBX.ResumeLayout(False)
         Me.confappGBX.PerformLayout()
         Me.ResumeLayout(False)
@@ -297,11 +315,13 @@ Partial Class Settings
     Friend WithEvents fahSnoozeTXT As TextBox
     Friend WithEvents snoozeLBL As Label
     Friend WithEvents slotwhitelistGBX As GroupBox
-    Friend WithEvents slotidsLBL As Label
-    Friend WithEvents slotidsTXT As TextBox
     Friend WithEvents confappGBX As GroupBox
     Friend WithEvents confappAddBTN As Button
     Friend WithEvents confappRemBTN As Button
     Friend WithEvents confappsCBX As CheckBox
     Friend WithEvents confappLBX As ListBox
+    Friend WithEvents slotsDGV As DataGridView
+    Friend WithEvents SlotID As DataGridViewTextBoxColumn
+    Friend WithEvents SlotName As DataGridViewTextBoxColumn
+    Friend WithEvents Whitelisted As DataGridViewCheckBoxColumn
 End Class

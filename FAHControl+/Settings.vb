@@ -1,11 +1,21 @@
 ﻿Public Class Settings
     Dim WithEvents fClient As FAHClient.Client
     Dim confappLBXTT As ToolTip
+
+    Public Sub New(Optional ByVal fClient As FAHClient.Client = Nothing)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Me.fClient = If(fClient, New FAHClient.Client())
+    End Sub
+
     Private Sub fahclientTestBTN_Click(sender As Object, e As EventArgs) Handles fahclientTestBTN.Click
         Logger.Write("Testing connection to FAHClient", "Settings")
-        Using fclient As New FAHClient.Client
-            fclient.Connect(False, fahclientAddressTXT.Text, fahclientPortTXT.Text)
-            If fclient.Connected Then
+        Using testClient As New FAHClient.Client
+            testClient.Connect(False, fahclientAddressTXT.Text, fahclientPortTXT.Text)
+            If testClient.Connected Then
                 Logger.Write("Test was successful.", "Settings")
                 MsgBox("Test successful!")
             Else
@@ -13,15 +23,6 @@
                 MsgBox("Test failed! Please ensure FAHClient is listening on port " & fahclientPortTXT.Text & ".")
             End If
         End Using
-    End Sub
-
-    Private Sub fClient_ConnectionMade() Handles fClient.ConnectionMade
-        If fahclientPasswordTXT.Text = String.Empty Then
-            MsgBox("Connection successful!")
-            fClient.Disconnect()
-        Else
-            fClient.SendCommand("add 2 2")
-        End If
     End Sub
 
     '***Likely doesn't work. Disabling for now.***
@@ -40,7 +41,7 @@
         fahclientPortTXT.Text = My.Settings.fahClientPort
         fahclientPasswordTXT.Text = My.Settings.fahClientPassword
         fahSnoozeTXT.Text = My.Settings.fahSnoozeValue
-        slotidsTXT.Text = My.Settings.fahSlotWhitelist
+        LoadSlots()
         confappsCBX.Checked = My.Settings.fahUseConfApp
 
         confappLBX.Items.Clear()
@@ -49,8 +50,26 @@
         confappLBXTT = New ToolTip()
     End Sub
 
-    Private Sub Settings_Closing(sender As Object, e As EventArgs) Handles MyBase.Closing
-        If fClient IsNot Nothing AndAlso fClient.Connected Then fClient.Disconnect()
+    Private Sub LoadSlots()
+        slotsDGV.Rows.Clear()
+
+        If fClient.Connected Then
+            Dim SlotWhiteList As List(Of String) = If(My.Settings.fahSlotWhitelist <> String.Empty, My.Settings.fahSlotWhitelist.Split(",").ToList(), New List(Of String))
+            fClient.ListSlots().ForEach(Sub(x)
+                                            Dim SlotChecked As Boolean = SlotWhiteList.Where(Function(y) y = x.ID).Count > 0
+                                            slotsDGV.Rows.Add({x.ID, x.Description, SlotChecked})
+                                        End Sub)
+        End If
+    End Sub
+
+    Private Sub SaveSlots()
+        Dim SlotWhiteList As New List(Of String)
+        For Each row As DataGridViewRow In slotsDGV.Rows
+            If row.Cells(2).Value = True Then SlotWhiteList.Add(row.Cells(0).Value)
+        Next
+        My.Settings.fahSlotWhitelist = String.Join(",", SlotWhiteList.ToArray())
+
+        My.Settings.Save()
     End Sub
 
     Private Sub Settings_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
@@ -86,12 +105,13 @@
             My.Settings.fahClientPort = fahclientPortTXT.Text
             My.Settings.fahClientPassword = fahclientPasswordTXT.Text
             My.Settings.fahSnoozeValue = fahSnoozeTXT.Text
-            My.Settings.fahSlotWhitelist = slotidsTXT.Text
 
             My.Settings.fahUseConfApp = confappsCBX.Checked
             My.Settings.fahConfApps = ListboxObjectCollectionToSpecializedStringCollection(confappLBX.Items)
 
             My.Settings.Save()
+
+            SaveSlots()
 
             Me.Close()
         Else

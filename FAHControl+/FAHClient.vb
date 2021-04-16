@@ -4,6 +4,7 @@
         Public Event UpdateReceived(ByVal Data As String)
         Public Event ConnectionMade()
         Public Event ConnectionLost(ByVal PreviouslyConnected As Boolean)
+        Public Event ExceptionOccurred(ByVal Component As String, ByVal Exception As Exception)
 
         Public Property SendLfOnCmd As Boolean
         Public Property WaitMSecondsBeforeClassifyUpdateMessage As Integer
@@ -80,13 +81,18 @@
         End Sub
 
         Public Sub SendCommand(ByVal Command As String)
-            If tClient.Connected Then
+            ' Will throw an exception if commands are sent too quickly.
+            If Command <> String.Empty AndAlso tClient.Connected Then
                 If SendLfOnCmd Then Command += vbLf
 
                 Dim b() As Byte = System.Text.ASCIIEncoding.ASCII.GetBytes(Command)
-                Dim wr As Net.Sockets.NetworkStream = tClient.GetStream()
-                wr.Write(b, 0, b.Length)
-                wr.Flush()
+                Try
+                    Dim wr As Net.Sockets.NetworkStream = tClient.GetStream()
+                    wr.Write(b, 0, b.Length)
+                    wr.Flush()
+                Catch ex As Exception
+                    RaiseEvent ExceptionOccurred("SendCommand", ex)
+                End Try
 
                 _LastCommandSend = Date.Now()
             End If
