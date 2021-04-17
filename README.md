@@ -9,3 +9,5 @@ By default, FAHControl+ doesn't control any slots until you list them. If you li
 As of this time, FAHControl+ does **NOT** support authentication. FAHClient cannot be configured with a password.
 
 Releases can be found here: https://github.com/tmontney/FAHControl-Plus/releases
+
+For feature requests, please use the Issues section: https://github.com/tmontney/FAHControl-Plus/issues
