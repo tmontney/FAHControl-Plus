@@ -6,7 +6,7 @@ This is a helper client to extend FAHControl, from Folding@Home. This "helper" b
 
 By default, FAHControl+ doesn't control any slots until you list them. If you listed slot 01, snoozing or conflicting apps would only toggle slot 01. This can be configured in Settings, via your System Tray.
 
-As of this time, FAHControl+ does **NOT** support authentication. FAHClient cannot be configured with a password.
+FAHControl+ supports password authentication as of version 1.0.1.32538.
 
 Releases can be found here: https://github.com/tmontney/FAHControl-Plus/releases
 
