@@ -7,13 +7,13 @@
 
             commandLFCBX.Checked = tClient.SendLfOnCmd
 
-            tClient.Connect(True, My.Settings.fahClientHost, My.Settings.fahClientPort)
+            tClient.Connect(True, My.Settings.fahClientHost, My.Settings.fahClientPort, My.Settings.fahClientPassword)
         End If
     End Sub
 
     Private Sub disconnectRBTN_CheckedChanged(sender As Object, e As EventArgs) Handles disconnectRBTN.CheckedChanged
         If disconnectRBTN.Checked Then
-            If tClient IsNot Nothing AndAlso tClient.Connected Then tClient.Disconnect()
+            If tClient IsNot Nothing AndAlso tClient.Connected Then tClient.Disconnect("User disconnected terminal")
             outputTXT.Clear()
         End If
     End Sub
@@ -38,7 +38,7 @@
         Logger.Write("Exception occurred for component " & Component & ": " & Exception.Message, "Terminal")
     End Sub
 
-    Private Sub tClient_ConnectionLost(ByVal PreviouslyConnected As Boolean) Handles tClient.ConnectionLost
+    Private Sub tClient_ConnectionLost(ByVal PreviouslyConnected As Boolean, ByVal Reason As String) Handles tClient.ConnectionLost
         RemoveHandler connectRBTN.CheckedChanged, AddressOf connectRBTN_CheckedChanged
         connectRBTN.Checked = False
         AddHandler connectRBTN.CheckedChanged, AddressOf connectRBTN_CheckedChanged
@@ -50,7 +50,7 @@
     End Sub
 
     Private Sub Terminal_Closing(sender As Object, e As EventArgs) Handles MyBase.Closing
-        If tClient IsNot Nothing AndAlso tClient.Connected Then tClient.Disconnect()
+        If tClient IsNot Nothing AndAlso tClient.Connected Then tClient.Disconnect("User closed terminal")
     End Sub
 
     Private Sub clearTerminalBTN_Click(sender As Object, e As EventArgs) Handles clearTerminalBTN.Click

@@ -37,14 +37,14 @@ Partial Class Settings
         Me.snoozeLBL = New System.Windows.Forms.Label()
         Me.slotwhitelistGBX = New System.Windows.Forms.GroupBox()
         Me.slotsDGV = New System.Windows.Forms.DataGridView()
+        Me.SlotID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SlotName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Whitelisted = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.confappGBX = New System.Windows.Forms.GroupBox()
         Me.confappAddBTN = New System.Windows.Forms.Button()
         Me.confappRemBTN = New System.Windows.Forms.Button()
         Me.confappsCBX = New System.Windows.Forms.CheckBox()
         Me.confappLBX = New System.Windows.Forms.ListBox()
-        Me.SlotID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SlotName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Whitelisted = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.fahclientGBX.SuspendLayout()
         Me.snoozeGBX.SuspendLayout()
         Me.slotwhitelistGBX.SuspendLayout()
@@ -70,9 +70,9 @@ Partial Class Settings
         '
         'fahclientPasswordTXT
         '
-        Me.fahclientPasswordTXT.Enabled = False
         Me.fahclientPasswordTXT.Location = New System.Drawing.Point(57, 83)
         Me.fahclientPasswordTXT.Name = "fahclientPasswordTXT"
+        Me.fahclientPasswordTXT.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.fahclientPasswordTXT.Size = New System.Drawing.Size(73, 20)
         Me.fahclientPasswordTXT.TabIndex = 5
         '
@@ -199,6 +199,27 @@ Partial Class Settings
         Me.slotsDGV.Size = New System.Drawing.Size(343, 160)
         Me.slotsDGV.TabIndex = 2
         '
+        'SlotID
+        '
+        Me.SlotID.HeaderText = "Slot ID"
+        Me.SlotID.Name = "SlotID"
+        Me.SlotID.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.SlotID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'SlotName
+        '
+        Me.SlotName.HeaderText = "Name"
+        Me.SlotName.Name = "SlotName"
+        Me.SlotName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.SlotName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Whitelisted
+        '
+        Me.Whitelisted.HeaderText = "Enabled"
+        Me.Whitelisted.Name = "Whitelisted"
+        Me.Whitelisted.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Whitelisted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
         'confappGBX
         '
         Me.confappGBX.Controls.Add(Me.confappAddBTN)
@@ -253,27 +274,6 @@ Partial Class Settings
         Me.confappLBX.Name = "confappLBX"
         Me.confappLBX.Size = New System.Drawing.Size(138, 121)
         Me.confappLBX.TabIndex = 0
-        '
-        'SlotID
-        '
-        Me.SlotID.HeaderText = "Slot ID"
-        Me.SlotID.Name = "SlotID"
-        Me.SlotID.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SlotID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'SlotName
-        '
-        Me.SlotName.HeaderText = "Name"
-        Me.SlotName.Name = "SlotName"
-        Me.SlotName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SlotName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Whitelisted
-        '
-        Me.Whitelisted.HeaderText = "Enabled"
-        Me.Whitelisted.Name = "Whitelisted"
-        Me.Whitelisted.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Whitelisted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         '
         'Settings
         '

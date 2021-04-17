@@ -71,7 +71,7 @@
         fw_a = New List(Of String)
 
         fc = New FAHClient.Client
-        fc.Connect(False)
+        fc.Connect(False, My.Settings.fahClientHost, My.Settings.fahClientPort, My.Settings.fahClientPassword)
     End Sub
 
     Private Sub snoozeMI_Click(sender As Object, e As EventArgs)
@@ -135,7 +135,7 @@
         fw_c.StopListening()
         fw_d.StopListening()
 
-        fc.Disconnect()
+        fc.Disconnect("Program end")
     End Sub
 
     Private Sub SnoozeCycle(Optional ByVal Slots As List(Of FAHClient.Slot) = Nothing)
@@ -180,14 +180,14 @@
         Logger.Write("Connected successfully to FAHClient.", "FAHClient")
     End Sub
 
-    Private Sub fc_ConnectionLost(ByVal PreviouslyConnected As Boolean) Handles fc.ConnectionLost
+    Private Sub fc_ConnectionLost(ByVal PreviouslyConnected As Boolean, ByVal Reason As String) Handles fc.ConnectionLost
         trayControl.ContextMenu.MenuItems.Item(0).Checked = False
-        Logger.Write("Lost connection to FAHClient.", "FAHClient")
+        Logger.Write("Lost connection to FAHClient: " & Reason, "FAHClient")
     End Sub
 
     Private Sub connectionMI_Click(sender As Object, e As EventArgs)
         Logger.Write("User clicked the connection button")
-        If trayControl.ContextMenu.MenuItems.Item(0).Checked Then fc.Disconnect() Else fc.Connect(False)
+        If trayControl.ContextMenu.MenuItems.Item(0).Checked Then fc.Disconnect("User disconnected") Else fc.Connect(False, My.Settings.fahClientHost, My.Settings.fahClientPort, My.Settings.fahClientPassword)
     End Sub
 
     Private Sub fw_ProcessEvent(ByVal Mode As ProcessWatcher.ModeEnum, ByVal ProcessName As String) Handles fw_c.ProcessEvent, fw_d.ProcessEvent

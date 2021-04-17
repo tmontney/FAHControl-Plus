@@ -14,13 +14,13 @@
     Private Sub fahclientTestBTN_Click(sender As Object, e As EventArgs) Handles fahclientTestBTN.Click
         Logger.Write("Testing connection to FAHClient", "Settings")
         Using testClient As New FAHClient.Client
-            testClient.Connect(False, fahclientAddressTXT.Text, fahclientPortTXT.Text)
+            testClient.Connect(False, fahclientAddressTXT.Text, fahclientPortTXT.Text, fahclientPasswordTXT.Text)
             If testClient.Connected Then
                 Logger.Write("Test was successful.", "Settings")
                 MsgBox("Test successful!")
             Else
                 Logger.Write("Test was not successful", "Settings")
-                MsgBox("Test failed! Please ensure FAHClient is listening on port " & fahclientPortTXT.Text & ".")
+                MsgBox("Test failed! Please ensure FAHClient is listening on port " & fahclientPortTXT.Text & " and that the password is correct (if required).")
             End If
         End Using
     End Sub

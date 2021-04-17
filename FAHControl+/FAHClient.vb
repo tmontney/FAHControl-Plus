@@ -3,7 +3,7 @@
         Public Event DataReceived(ByVal Data As String())
         Public Event UpdateReceived(ByVal Data As String)
         Public Event ConnectionMade()
-        Public Event ConnectionLost(ByVal PreviouslyConnected As Boolean)
+        Public Event ConnectionLost(ByVal PreviouslyConnected As Boolean, ByVal Reason As String)
         Public Event ExceptionOccurred(ByVal Component As String, ByVal Exception As Exception)
 
         Public Property SendLfOnCmd As Boolean
@@ -14,12 +14,18 @@
         Public ReadOnly Property Connected As Boolean
         Public ReadOnly Property LastCommandSend As Date
         Public ReadOnly Property AlwaysListen As Boolean
+        Public ReadOnly Property WithAuthentication As Boolean
+            Get
+                Return password <> String.Empty
+            End Get
+        End Property
 
         Private tClient As Net.Sockets.TcpClient
         Private SuppressDataReceivedEvents As Integer
         Private tListener As Threading.Thread
         Private Connecting As Boolean
         Private Property Updates As List(Of Update)
+        Private password As String
 
         Public Sub New()
             SendLfOnCmd = True
@@ -28,23 +34,41 @@
             Updates = New List(Of Update)
         End Sub
 
+        ' credential parameter does not require a username set.
         Public Sub Connect(ByVal AlwaysListen As Boolean, Optional ByVal host As String = "localhost",
-                Optional ByVal port As Integer = 36330)
+                Optional ByVal port As Integer = 36330, Optional ByVal password As String = "")
             _Host = host
             _Port = port
             _AlwaysListen = AlwaysListen
+            Me.password = password
 
             Connecting = True
 
             Try
                 tClient = New Net.Sockets.TcpClient(host, port)
             Catch ex As Exception
-                SetConnectionLost()
+                SetConnectionLost("Connection failure")
                 Exit Sub
             End Try
 
             _Connected = tClient.Connected
             If _Connected Then SetConnectionMade()
+
+            Dim initialCmd As String = If(WithAuthentication, "auth " & password, "add 2 2")
+            Dim initialResponse As String = If(WithAuthentication, "OK", "4>")
+            Dim failureReason As String = If(WithAuthentication, "Authentication failure", "Connection failure")
+
+            ' If authentication not required, any command other than a successful 'auth' will close the connection.
+            ' Could read the FAHClient config file to determine if authentication required.
+            Dim AuthResponse As List(Of String) = SendReceiveCommand(initialCmd, 2, 1000,, True)
+            If AuthResponse.Find(Function(x) x.Replace(vbNullChar, String.Empty).Replace(" ", String.Empty) = initialResponse) Is Nothing Then
+                SetConnectionLost(failureReason)
+                Exit Sub
+            Else
+                ' After connecting, FAHClient will ignore the first command sent.
+                ' Sending just VbLf does not work.
+                SendCommand("add 2 2")
+            End If
 
             tListener = New Threading.Thread(AddressOf Listen)
             tListener.Start()
@@ -73,11 +97,11 @@
             Next
         End Sub
 
-        Public Sub Disconnect()
+        Public Sub Disconnect(ByVal Reason As String)
             SendCommand("quit")
             If tListener IsNot Nothing Then tListener.Abort()
             If tClient IsNot Nothing Then tClient.Close()
-            SetConnectionLost()
+            SetConnectionLost(Reason)
         End Sub
 
         Public Sub SendCommand(ByVal Command As String)
@@ -98,7 +122,8 @@
             End If
         End Sub
 
-        Public Function SendReceiveCommand(ByVal Command As String, ByVal WaitForMessages As Integer, ByVal MaxMSWaitBetweenMessages As Integer, Optional ByVal IncludeDateStamp As Boolean = False) As List(Of String)
+        Public Function SendReceiveCommand(ByVal Command As String, ByVal WaitForMessages As Integer, ByVal MaxMSWaitBetweenMessages As Integer,
+                                           Optional ByVal IncludeDateStamp As Boolean = False, Optional ByVal SplitOnLf As Boolean = False) As List(Of String)
             Dim Responses As New List(Of String)
 
             If AlwaysListen = False Then
@@ -107,8 +132,8 @@
                 For i As Integer = 0 To WaitForMessages - 1
                     Dim Response As String = ReceiveResponse(, MaxMSWaitBetweenMessages)
                     If Response = "-1" Or Response = String.Empty Then Exit For
-                    If IncludeDateStamp Then Response = Date.Now.ToString("MM/dd/yyyy HH:MM:ss.fff") + vbNewLine + Response
-                    Responses.Add(Response)
+                    If IncludeDateStamp Then Response = Date.Now.ToString("MM/dd/yyyy HH: MM:ss.fff") + vbNewLine + Response
+                    If SplitOnLf Then Responses.AddRange(Response.Split(vbLf)) Else Responses.Add(Response)
                 Next
             End If
 
@@ -119,10 +144,10 @@
             Dim b(BufferSize) As Byte
             Dim r As Integer = 0
 
-            Dim ns As Net.Sockets.NetworkStream = tClient.GetStream()
-            If ReadTimeout > -1 Then ns.ReadTimeout = ReadTimeout Else ns.ReadTimeout = -1
-
             Try
+                Dim ns As Net.Sockets.NetworkStream = tClient.GetStream()
+                If ReadTimeout > -1 Then ns.ReadTimeout = ReadTimeout Else ns.ReadTimeout = -1
+
                 r = ns.Read(b, 0, b.Length)
                 ns.Flush()
             Catch timeout As System.IO.IOException
@@ -157,7 +182,7 @@
                 If AlwaysListen = False Then Exit While
             End While
 
-            If AlwaysListen Then Disconnect()
+            'If AlwaysListen Then Disconnect("User disconnected or remote host became inaccessible")
         End Sub
 
         Private Sub SetConnectionMade()
@@ -165,8 +190,8 @@
             RaiseEvent ConnectionMade()
         End Sub
 
-        Private Sub SetConnectionLost()
-            RaiseEvent ConnectionLost(_Connected)
+        Private Sub SetConnectionLost(ByVal Reason As String)
+            RaiseEvent ConnectionLost(_Connected, Reason)
             _Connected = False
         End Sub
 
@@ -198,7 +223,7 @@
         End Function
 
         Public Sub Dispose() Implements IDisposable.Dispose
-            Disconnect()
+            Disconnect("Likely reason: This program shut down (garbage collection).")
         End Sub
     End Class
 
